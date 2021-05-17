@@ -63,16 +63,13 @@ if __name__ == '__main__':
     birb = Player()
 
     top_pipe = Pipe(offset=0)
-    bottom_pipe = Pipe(offset=0, side="BOTTOM")
+    bottom_pipe = Pipe(offset=0, side="BOTTOM", other_pipe=top_pipe)
 
-    top_pipe1 = Pipe(offset=400)
-    bottom_pipe1 = Pipe(offset=400, side="BOTTOM")
+    top_pipe1 = Pipe(offset=500)
+    bottom_pipe1 = Pipe(offset=500, side="BOTTOM", other_pipe=top_pipe1)
 
-    top_pipe2 = Pipe(offset=700)
-    bottom_pipe2 = Pipe(offset=700, side="BOTTOM")
-
-    top_pipe3 = Pipe(offset=950)
-    bottom_pipe3 = Pipe(offset=950, side="BOTTOM")
+    top_pipe2 = Pipe(offset=1000)
+    bottom_pipe2 = Pipe(offset=1000, side="BOTTOM", other_pipe=top_pipe2)
 
     run_game(
         [   
@@ -86,9 +83,6 @@ if __name__ == '__main__':
 
             top_pipe2.draw,
             bottom_pipe2.draw,
-
-            top_pipe3.draw,
-            bottom_pipe3.draw,
 
             score_draw
 
@@ -107,8 +101,6 @@ if __name__ == '__main__':
             top_pipe2.update,
             bottom_pipe2.update,
 
-            top_pipe3.update,
-            bottom_pipe3.update
 
         ],
 

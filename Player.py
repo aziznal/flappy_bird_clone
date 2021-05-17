@@ -35,8 +35,8 @@ class Player:
                 self.started_jumping = False
 
             else:
-                self.total_jumped += 15
-                self.rect.y -= 15
+                self.total_jumped += PlayerSettings.jump_increment_per_frame
+                self.rect.y -= PlayerSettings.jump_increment_per_frame
 
 
     def jump(self):

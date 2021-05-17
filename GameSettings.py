@@ -26,9 +26,10 @@ class PlayerSettings:
     height = 50
 
     # px per frame (multiply by 60)
-    fall_speed = 8
+    fall_speed = 15
 
     jump_height_limit = 120
+    jump_increment_per_frame = 10
 
 
 class PipeSettings:
@@ -39,10 +40,16 @@ class PipeSettings:
     tip_width =  width + 20
     tip_height = 75
 
-    move_speed = 8  # px per frame
+    move_speed = 4  # px per frame
 
 
     @staticmethod
     def get_random_height():
 
-        return randint(PlayerSettings.jump_height_limit + 10, ScreenSettings.height // 2)
+        # Height must be at least 20% of the screen height
+        # Height will be upto half the screen minus player jump height so game is never technically impossible
+
+        bottom_limit =  ScreenSettings.height * 20/100
+        top_limit = ScreenSettings.height * 60/100
+
+        return randint(bottom_limit, top_limit)
