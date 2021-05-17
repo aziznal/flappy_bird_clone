@@ -24,7 +24,7 @@ def get_screen():
 
 def get_text(text, size, color, position):
 
-    font = pygame.font.SysFont("consolas", size)
+    font = pygame.font.SysFont("arial", size)
 
     img = font.render(text, True, color)
 
@@ -35,7 +35,10 @@ def get_text(text, size, color, position):
 
 def wait_for_player_to_start_game(screen, draw_functions):
 
+    start_text, start_text_draw = get_text("Press Space to Start", size=56, color=Colors.black, position=(ScreenSettings.width/2 - 300, ScreenSettings.height/2 - 200))
+
     while True:
+
         has_pressed_space = handle_player_start_game()
 
         if has_pressed_space:
@@ -47,6 +50,7 @@ def wait_for_player_to_start_game(screen, draw_functions):
 
         for func in draw_functions:
             func(screen)
+            start_text_draw(screen)
 
 
         pygame.display.flip()

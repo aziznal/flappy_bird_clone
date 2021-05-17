@@ -14,6 +14,7 @@ class Player:
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
 
         self.started_jumping = False
+        self.in_mid_jump = False
         self.total_jumped = 0
 
 
@@ -26,23 +27,45 @@ class Player:
 
 
     def update(self):
-        self.fall()
+
+        if not self.in_mid_jump and not self.started_jumping:
+            self.fall()
 
         if self.started_jumping:
 
-            if self.total_jumped >= PlayerSettings.jump_height_limit:
+            if self.in_mid_jump:
+                self.started_jumping = True
+                self.in_mid_jump = False
+
+                # Reset player's current jump amount so they start jumping again from their current height
+                self.total_jumped = 0
+            
+            else:
+                self.started_jumping = False
+                self.in_mid_jump = True
+
+        if self.in_mid_jump:
+            self.execute_jump()
+
+
+    def execute_jump(self):
+
+
+        # Jump has finished. snap back to reality. oh there goes gravity.
+        if self.total_jumped >= PlayerSettings.jump_height_limit:
                 self.total_jumped = 0
                 self.started_jumping = False
+                self.in_mid_jump = False
 
-            else:
-                self.total_jumped += PlayerSettings.jump_increment_per_frame
-                self.rect.y -= PlayerSettings.jump_increment_per_frame
+        else:
+            self.total_jumped += PlayerSettings.jump_increment_per_frame
+            self.rect.y -= PlayerSettings.jump_increment_per_frame
 
 
     def jump(self):
         self.started_jumping = True
+        # self.in_mid_jump = False
 
 
     def fall(self):
-        if not self.started_jumping:
-            self.rect.y += PlayerSettings.fall_speed
+        self.rect.y += PlayerSettings.fall_speed
