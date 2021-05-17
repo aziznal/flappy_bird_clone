@@ -24,6 +24,13 @@ def handle_keyboard(events, on_player_jump):
 
             
 
+def handle_player_start_game():
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            return event.key == pygame.K_SPACE
+                
+
+
 def handle_events(on_player_jump):
 
     events = pygame.event.get()
@@ -32,3 +39,4 @@ def handle_events(on_player_jump):
     handle_quit(events)
 
     handle_keyboard(events, on_player_jump)
+

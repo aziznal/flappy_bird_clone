@@ -5,7 +5,7 @@ game_clock = pygame.time.Clock()
 from GameSettings import *
 
 
-from Events import handle_events
+from Events import handle_events, handle_player_start_game
 
 from Player import Player
 
@@ -32,9 +32,35 @@ def get_text(text, size, color, position):
 
 
 
+
+def wait_for_player_to_start_game(screen, draw_functions):
+
+    while True:
+        has_pressed_space = handle_player_start_game()
+
+        if has_pressed_space:
+            break
+        
+
+        screen.fill(Colors.screen_background)
+
+
+        for func in draw_functions:
+            func(screen)
+
+
+        pygame.display.flip()
+
+        game_clock.tick(60)
+
+
 def run_game(draw_functions, update_funcs, player):
 
-    screen= get_screen()
+    screen = get_screen()
+
+
+    wait_for_player_to_start_game(screen, draw_functions)
+
 
     while True:
 
