@@ -17,6 +17,9 @@ class Player:
         self.in_mid_jump = False
         self.total_jumped = 0
 
+        self.current_time = GravitySettings.time_vector[0]
+        self.next_time_index = 1
+
 
     def draw(self, screen):
 
@@ -64,8 +67,21 @@ class Player:
 
     def jump(self):
         self.started_jumping = True
-        # self.in_mid_jump = False
+        self.current_time = GravitySettings.time_vector[0]
+        self.next_time_index = 1
+
+
+    def get_next_time(self):
+
+        if self.next_time_index < len(GravitySettings.time_vector) - 1:
+            self.next_time_index += 1
+            return GravitySettings.time_vector[self.next_time_index - 1]
+
+        # If at terminal velocity, then t stops changing
+        else:
+            return GravitySettings.time_vector[-1]
 
 
     def fall(self):
-        self.rect.y += PlayerSettings.fall_speed
+        self.rect.y += PlayerSettings.fall_speed * self.current_time + .5*GravitySettings.acceleration*(self.current_time**2)
+        self.current_time = self.get_next_time()

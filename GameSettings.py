@@ -26,7 +26,7 @@ class PlayerSettings:
     height = 50
 
     # px per frame (multiply by 60)
-    fall_speed = 15
+    fall_speed = 0.3
 
     jump_height_limit = 120
     jump_increment_per_frame = 10
@@ -53,3 +53,11 @@ class PipeSettings:
         top_limit = ScreenSettings.height * 60/100
 
         return randint(bottom_limit, top_limit)
+
+
+class GravitySettings:
+
+    time_vector = list(range(2, 10))   # terminal velocity is reached at t = 59 (one second)
+
+    acceleration = .2    # px / second (probably?)
+
