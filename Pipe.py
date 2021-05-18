@@ -6,8 +6,10 @@ from GameSettings import *
 
 class Pipe:
 
-    def __init__(self, offset=0, side="TOP", other_pipe=None):
+    def __init__(self, offset=0, side="TOP", other_pipe=None, player=None):
         
+        self.player = player
+
         if side not in ["TOP", "BOTTOM"]:
             raise ValueError(f'"side" argument must be either "TOP" or "BOTTOM". Got {side} instead')
 
@@ -129,6 +131,8 @@ class Pipe:
         self.move_left()
         self.check_out_of_bounds()
 
+        self.check_collision_with_player()
+
 
 
     def move_left(self):
@@ -158,4 +162,9 @@ class Pipe:
         self.body_rect.y = self.y
 
         self.tip_rect = self.get_tip_rect()
+
+
+    def check_collision_with_player(self):
+        if pygame.Rect.colliderect(self.body_rect, self.player.rect) == 1:
+            self.player.die()
 

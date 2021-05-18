@@ -92,14 +92,14 @@ if __name__ == '__main__':
 
     birb = Player()
 
-    top_pipe = Pipe(offset=0)
-    bottom_pipe = Pipe(offset=0, side="BOTTOM", other_pipe=top_pipe)
+    top_pipe = Pipe(offset=0, player=birb)
+    bottom_pipe = Pipe(offset=0, side="BOTTOM", other_pipe=top_pipe, player=birb)
 
-    top_pipe1 = Pipe(offset=500)
-    bottom_pipe1 = Pipe(offset=500, side="BOTTOM", other_pipe=top_pipe1)
+    top_pipe1 = Pipe(offset=500, player=birb)
+    bottom_pipe1 = Pipe(offset=500, side="BOTTOM", other_pipe=top_pipe1, player=birb)
 
-    top_pipe2 = Pipe(offset=1000)
-    bottom_pipe2 = Pipe(offset=1000, side="BOTTOM", other_pipe=top_pipe2)
+    top_pipe2 = Pipe(offset=1000, player=birb)
+    bottom_pipe2 = Pipe(offset=1000, side="BOTTOM", other_pipe=top_pipe2, player=birb)
 
     run_game(
         [   

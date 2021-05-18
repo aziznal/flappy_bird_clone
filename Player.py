@@ -6,6 +6,8 @@ from GameSettings import *
 class Player:
     def __init__(self):
         
+        self.color = Colors.blue
+
         self.x, self.y = ScreenSettings.width//4, ScreenSettings.height//2
 
         self.width, self.height = PlayerSettings.width, PlayerSettings.height
@@ -23,7 +25,7 @@ class Player:
 
     def draw(self, screen):
 
-        pygame.draw.rect(screen, Colors.red, self.rect)
+        pygame.draw.rect(screen, self.color, self.rect)
 
         # outline
         pygame.draw.rect(screen, Colors.black, self.rect, width=1)
@@ -85,3 +87,7 @@ class Player:
     def fall(self):
         self.rect.y += PlayerSettings.fall_speed * self.current_time + .5*GravitySettings.acceleration*(self.current_time**2)
         self.current_time = self.get_next_time()
+
+
+    def die(self):
+        self.color = Colors.red
