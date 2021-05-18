@@ -49,8 +49,8 @@ class PipeSettings:
         # Height must be at least 20% of the screen height
         # Height will be upto half the screen minus player jump height so game is never technically impossible
 
-        bottom_limit =  ScreenSettings.height * 20/100
-        top_limit = ScreenSettings.height * 60/100
+        bottom_limit =  ScreenSettings.height * 10/100
+        top_limit = ScreenSettings.height * 70/100
 
         return randint(bottom_limit, top_limit)
 

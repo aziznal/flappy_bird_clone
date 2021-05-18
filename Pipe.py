@@ -41,10 +41,12 @@ class Pipe:
     def get_height_according_to_other_pipe(self):
 
         # Bottom side must leave at least jump limit distance from top pipe
-        lower_limit = ScreenSettings.height - self.other_pipe.height - PlayerSettings.jump_height_limit*3
-        upper_limit = ScreenSettings.height - self.other_pipe.height - (PlayerSettings.jump_height_limit*2)
+        # lower_limit = ScreenSettings.height - self.other_pipe.height - PlayerSettings.jump_height_limit*3
+        # upper_limit = ScreenSettings.height - self.other_pipe.height - (PlayerSettings.jump_height_limit*2)
 
-        height = randint(lower_limit, upper_limit)
+        # height = randint(lower_limit, upper_limit)
+
+        height = upper_limit = ScreenSettings.height - self.other_pipe.height - (PlayerSettings.jump_height_limit*2.5)
 
         return height
 
