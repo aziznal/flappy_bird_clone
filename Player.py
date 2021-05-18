@@ -4,10 +4,11 @@ from GameSettings import *
 
 
 class Player:
-    def __init__(self):
+    def __init__(self, on_death):
         
         self.color = Colors.blue
 
+        self.on_death = on_death
         self.x, self.y = ScreenSettings.width//4, ScreenSettings.height//2
 
         self.width, self.height = PlayerSettings.width, PlayerSettings.height
@@ -52,6 +53,8 @@ class Player:
         if self.in_mid_jump:
             self.execute_jump()
 
+        self.check_if_out_of_bounds()
+
 
     def execute_jump(self):
 
@@ -89,5 +92,16 @@ class Player:
         self.current_time = self.get_next_time()
 
 
+
+    def check_if_out_of_bounds(self):
+
+        if self.rect.bottom >= ScreenSettings.height\
+            or self.rect.top <= 0:
+            self.die()
+
+    
     def die(self):
         self.color = Colors.red
+        self.on_death()
+
+    

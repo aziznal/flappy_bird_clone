@@ -165,6 +165,8 @@ class Pipe:
 
 
     def check_collision_with_player(self):
-        if pygame.Rect.colliderect(self.body_rect, self.player.rect) == 1:
+        # If body or tip collide with player
+        if pygame.Rect.colliderect(self.body_rect, self.player.rect) == 1 \
+            or pygame.Rect.colliderect(self.tip_rect, self.player.rect):
             self.player.die()
 
