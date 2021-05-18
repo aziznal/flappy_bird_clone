@@ -26,10 +26,10 @@ class PlayerSettings:
     height = 50
 
     # px per frame (multiply by 60)
-    fall_speed = 0.3
+    fall_speed = 0.4
 
-    jump_height_limit = 120
-    jump_increment_per_frame = 10
+    jump_height_limit = 90 + 9 *3
+    jump_increment_per_frame = 9
 
 
 class PipeSettings:
