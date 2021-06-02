@@ -1,12 +1,13 @@
-from typing import Tuple
+from typing import Callable, List, Tuple
 import pygame
 
 from GameSettings import *
 
+from Pipe import Pipe
 
-# TODO: annotate class with typehints
+
 class Player:
-    def __init__(self, on_death, pipes) -> None:
+    def __init__(self, on_death: Callable[[], None], pipes: List[Pipe]) -> None:
         """
         on_death: callback method for when player dies
         """
@@ -35,7 +36,7 @@ class Player:
         return (ScreenSettings.width // 4, ScreenSettings.height // 2)
 
 
-    def draw(self, screen) -> None:
+    def draw(self, screen: pygame.Surface) -> None:
         """
         Draws player
         """
@@ -141,7 +142,6 @@ class Player:
         if self.rect.bottom >= ScreenSettings.height\
             or self.rect.top <= 0:
             self.die()
-
 
     def check_collision_with_pipes(self) -> None:
                 
