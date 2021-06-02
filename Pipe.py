@@ -7,7 +7,7 @@ from GameSettings import *
 
 class Pipe:
 
-    def __init__(self, offset: int =0, side: Literal['TOP', 'BOTTOM']='TOP', top_pipe=None, player=None) -> None:
+    def __init__(self, offset: int =0, side: Literal['TOP', 'BOTTOM']='TOP', top_pipe=None) -> None:
         """
         offset: x offset to spawn the pipe at. this also affects where the pipe 'rolls back' around the screen
 
@@ -23,7 +23,6 @@ class Pipe:
         self.side = side
         self.offset = offset
         self.top_pipe = top_pipe
-        self.player = player
         
         # Pipe Size and Location Settings
         self.width = PipeSettings.width
@@ -169,7 +168,6 @@ class Pipe:
         self.move_left()
         self.check_if_past_screen_left()
 
-        self.check_collision_with_player()
 
     def move_left(self) -> None:
         """
@@ -205,13 +203,3 @@ class Pipe:
         self.body_rect.y = self.y
 
         self.tip_rect = self.get_tip_rect()
-
-
-    # REFACTOR: Move collision checking to player object to allow multiple players spawning at once.
-    def check_collision_with_player(self) -> None:
-        
-        # If body or tip collide with player
-        if pygame.Rect.colliderect(self.body_rect, self.player.rect) == 1 \
-            or pygame.Rect.colliderect(self.tip_rect, self.player.rect):
-
-            self.player.die()
