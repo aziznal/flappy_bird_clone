@@ -1,12 +1,12 @@
-from typing import Callable, List, Literal, Tuple
+from typing import Callable, List
 import pygame
-from pygame import draw
 
 from GameSettings import *
 
 from Events import handle_events, handle_player_start_game, handle_quit
 from Player import Player
 from Pipes import Pipes
+from TextObject import TextObject
 
 pygame.init()
 pygame.font.init()
@@ -21,27 +21,17 @@ def get_screen() -> pygame.Surface:
     return pygame.display.set_mode((ScreenSettings.width, ScreenSettings.height))
 
 
-# TODO: replace this with class for Text Objects to make manipulating them easier
-def get_text(
-    text: str,
-    size: int,
-    color: Colors,
-    position: Tuple[float, float]
-    ) -> Tuple[pygame.Surface, Callable[[pygame.Surface], None]]:
-
-    font = pygame.font.SysFont("arial", size)
-
-    img = font.render(text, True, color)
-
-    return img, lambda screen: screen.blit(img, position)
-
-
 def display_start_screen(
     screen: pygame.Surface,
     draw_functions: List[Callable[[pygame.Surface], None]]
     ) -> None:
 
-    start_text, start_text_draw = get_text("Press Space to Start", size=56, color=Colors.black, position=(ScreenSettings.width/2 - 300, ScreenSettings.height/2 - 200))
+    start_text = TextObject(
+        text="Press Space to Start",
+        font_size=56,
+        color=Colors.black,
+        position=(ScreenSettings.width/2, ScreenSettings.height/2 - 100)
+    )
 
     while True:
 
@@ -56,7 +46,7 @@ def display_start_screen(
 
         for func in draw_functions:
             func(screen)
-            start_text_draw(screen)
+            start_text.draw(screen)
 
 
         pygame.display.flip()
@@ -64,19 +54,22 @@ def display_start_screen(
         game_clock.tick(60)
 
 
-def on_player_death(
-    screen: pygame.Surface,
-    draw_functions: List[Callable[[pygame.Surface], None]]
-    ) -> None:
+def display_gameover_screen(screen: pygame.Surface) -> None:
     
+    gameover_text = TextObject(
+        text="Gameover!",
+        font_size=56,
+        color=Colors.red,
+        position=(ScreenSettings.width/2, ScreenSettings.height/2 - 100)
+    )
+
     while True:
 
         handle_quit(pygame.event.get())
 
         screen.fill(Colors.screen_background)
 
-        for func in draw_functions:
-            func(screen)
+        gameover_text.draw(screen)
 
         pygame.display.flip()
 
@@ -122,32 +115,26 @@ if __name__ == '__main__':
 
     screen = get_screen()
 
-    # REFACTOR: change these into TextObject class after that's been created
-    score, score_draw = get_text("Score", 30, Colors.black, (ScreenSettings.width / 2, 20))
-    gameover_text, gameover_text_draw = get_text(
-        "Game over!",
-        size=56,
-        color=Colors.red,
-        position=(ScreenSettings.width/2 - 100, ScreenSettings.height/2 - 100)
+    score_text = TextObject(
+        text="Score: ",
+        font_size=30,
+        color=Colors.black,
+        position=(ScreenSettings.width/2, 20)
     )
-
 
     pipes = Pipes(0, 500, 1000)
     
-    birb = Player(on_death=lambda: on_player_death(screen, [gameover_text_draw]), pipes = pipes.pipes)
+    birb = Player(on_death=lambda: display_gameover_screen(screen), pipes = pipes.pipes)
 
     run_game(
 
         screen=screen,
-
         player=birb,
-
         draw_functions=[
             birb.draw,
             pipes.draw,
-            score_draw
+            score_text.draw
         ],
-
         update_functions=[   
             birb.update,
             pipes.update
