@@ -37,7 +37,7 @@ class PipeSettings:
     tip_width =  width + 20
     tip_height = 75
 
-    scroll_left_speed = 4  # px per frame
+    scroll_left_speed = 6  # px per frame
 
 
     @staticmethod

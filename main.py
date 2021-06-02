@@ -1,3 +1,4 @@
+from PlayerController import PlayerController
 from typing import Callable, List
 import pygame
 
@@ -124,7 +125,10 @@ if __name__ == '__main__':
 
     pipes = Pipes(0, 500, 1000)
     
-    birb = Player(on_death=lambda: display_gameover_screen(screen), pipes = pipes.pipes)
+    birb = Player(on_death=lambda: display_gameover_screen(screen), pipes = [])
+
+    controller =  PlayerController([])
+    controller.make_player_jump_at_a_constant_rate()
 
     run_game(
 
@@ -133,11 +137,13 @@ if __name__ == '__main__':
         draw_functions=[
             birb.draw,
             pipes.draw,
-            score_text.draw
+            score_text.draw,
+            controller.draw
         ],
         update_functions=[   
             birb.update,
-            pipes.update
+            pipes.update,
+            controller.update
         ]
 
     )
