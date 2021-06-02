@@ -1,11 +1,12 @@
 from typing import Callable, List, Literal, Tuple
 import pygame
+from pygame import draw
 
 from GameSettings import *
 
 from Events import handle_events, handle_player_start_game, handle_quit
 from Player import Player
-from Pipe import Pipe
+from Pipes import Pipes
 
 pygame.init()
 pygame.font.init()
@@ -131,29 +132,9 @@ if __name__ == '__main__':
     )
 
 
-    # TODO: create 'Pipes' class to make drawing and colliding with pipes syntatically cleaner
-    # REFACTOR: create these using Pipes class after that's been created
-    top_pipe = Pipe(offset=0)
-    bottom_pipe = Pipe(offset=0, side="BOTTOM", top_pipe=top_pipe)
-
-    top_pipe1 = Pipe(offset=500)
-    bottom_pipe1 = Pipe(offset=500, side="BOTTOM", top_pipe=top_pipe1)
-
-    top_pipe2 = Pipe(offset=1000)
-    bottom_pipe2 = Pipe(offset=1000, side="BOTTOM", top_pipe=top_pipe2)
-
-    pipes = [
-        top_pipe,
-        bottom_pipe,
-
-        top_pipe1,
-        bottom_pipe1,
-
-        top_pipe2,
-        bottom_pipe2
-    ]
-
-    birb = Player(on_death=lambda: on_player_death(screen, [gameover_text_draw]), pipes = pipes)
+    pipes = Pipes(0, 500, 1000)
+    
+    birb = Player(on_death=lambda: on_player_death(screen, [gameover_text_draw]), pipes = pipes.pipes)
 
     run_game(
 
@@ -163,33 +144,13 @@ if __name__ == '__main__':
 
         draw_functions=[
             birb.draw,
-
-            top_pipe.draw,
-            bottom_pipe.draw,
-
-            top_pipe1.draw,
-            bottom_pipe1.draw,
-
-            top_pipe2.draw,
-            bottom_pipe2.draw,
-
+            pipes.draw,
             score_draw
-
         ],
 
         update_functions=[   
-
             birb.update,
-
-            top_pipe.update,
-            bottom_pipe.update,
-
-            top_pipe1.update,
-            bottom_pipe1.update,
-
-            top_pipe2.update,
-            bottom_pipe2.update,
-
+            pipes.update
         ]
 
     )
