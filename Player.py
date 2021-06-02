@@ -4,13 +4,15 @@ import pygame
 from GameSettings import *
 
 
+# TODO: annotate class with typehints
 class Player:
-    def __init__(self, on_death) -> None:
+    def __init__(self, on_death, pipes) -> None:
         """
         on_death: callback method for when player dies
         """
         
         self.on_death = on_death
+        self.pipes = pipes
 
         self.color = Colors.blue
         
@@ -50,6 +52,8 @@ class Player:
         """
 
         self.check_if_out_of_bounds()
+
+        self.check_collision_with_pipes()
 
         if self.started_jumping or self.in_mid_jump:
             self.handle_jumping()
@@ -138,7 +142,15 @@ class Player:
             or self.rect.top <= 0:
             self.die()
 
-    
+
+    def check_collision_with_pipes(self) -> None:
+                
+        for pipe in self.pipes:
+            if pygame.Rect.colliderect(self.rect, pipe.body_rect) \
+                or pygame.Rect.colliderect(self.rect, pipe.tip_rect):
+                self.die()
+        
+
     def die(self) -> None:
         """
         This method is called when this player has satisfied a condition for death

@@ -130,19 +130,30 @@ if __name__ == '__main__':
         position=(ScreenSettings.width/2 - 100, ScreenSettings.height/2 - 100)
     )
 
-    birb = Player(on_death=lambda: on_player_death(screen, [gameover_text_draw]))
 
     # TODO: create 'Pipes' class to make drawing and colliding with pipes syntatically cleaner
     # REFACTOR: create these using Pipes class after that's been created
-    top_pipe = Pipe(offset=0, player=birb)
-    bottom_pipe = Pipe(offset=0, side="BOTTOM", top_pipe=top_pipe, player=birb)
+    top_pipe = Pipe(offset=0)
+    bottom_pipe = Pipe(offset=0, side="BOTTOM", top_pipe=top_pipe)
 
-    top_pipe1 = Pipe(offset=500, player=birb)
-    bottom_pipe1 = Pipe(offset=500, side="BOTTOM", top_pipe=top_pipe1, player=birb)
+    top_pipe1 = Pipe(offset=500)
+    bottom_pipe1 = Pipe(offset=500, side="BOTTOM", top_pipe=top_pipe1)
 
-    top_pipe2 = Pipe(offset=1000, player=birb)
-    bottom_pipe2 = Pipe(offset=1000, side="BOTTOM", top_pipe=top_pipe2, player=birb)
+    top_pipe2 = Pipe(offset=1000)
+    bottom_pipe2 = Pipe(offset=1000, side="BOTTOM", top_pipe=top_pipe2)
 
+    pipes = [
+        top_pipe,
+        bottom_pipe,
+
+        top_pipe1,
+        bottom_pipe1,
+
+        top_pipe2,
+        bottom_pipe2
+    ]
+
+    birb = Player(on_death=lambda: on_player_death(screen, [gameover_text_draw]), pipes = pipes)
 
     run_game(
 
