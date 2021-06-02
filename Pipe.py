@@ -1,28 +1,33 @@
 import pygame
-from random import randint
+
+from typing import Literal, Union
 
 from GameSettings import *
 
 
 class Pipe:
 
-    def __init__(self, offset=0, side="TOP", other_pipe=None, player=None):
-        
-        self.player = player
+    def __init__(self, offset: int =0, side: Literal['TOP', 'BOTTOM']='TOP', top_pipe=None, player=None) -> None:
+        """
+        offset: x offset to spawn the pipe at. this also affects where the pipe 'rolls back' around the screen
 
-        if side not in ["TOP", "BOTTOM"]:
-            raise ValueError(f'"side" argument must be either "TOP" or "BOTTOM". Got {side} instead')
+        side: "TOP" or "BOTTOM". specifies which side of the screen the pipe is on.
+
+        top_pipe: Reference to TOP pipe. Set only if this is bottom pipe.
+
+        player: reference to player to check collisions
+        """
+
+        self.check_side_and_top_pipe_reference(side, top_pipe)
 
         self.side = side
         self.offset = offset
-
-        # Bottom pipe will keep a ref to top pipe to help with calculating new height
-        self.other_pipe = other_pipe
-
-        self.width = PipeSettings.width
+        self.top_pipe = top_pipe
+        self.player = player
         
+        # Pipe Size and Location Settings
+        self.width = PipeSettings.width
         self.height = self.set_height()
-
 
         # X starts out of bounds on right of screen plus a little buffer
         self.starting_x = ScreenSettings.width + self.width + 100 + self.offset
@@ -31,29 +36,40 @@ class Pipe:
         self.tip_rect = self.get_tip_rect()
 
 
+    def check_side_and_top_pipe_reference(self, side, top_pipe_reference) -> None:
+        if side not in ["TOP", "BOTTOM"]:
+            raise ValueError(f'"side" argument must be either "TOP" or "BOTTOM". Got {side} instead')
 
-    def set_height(self):
+        if side == "TOP" and top_pipe_reference is not None:
+            raise ValueError("Cannot assign reference to top pipe if this is not a bottom pipe")
+
+    def set_height(self) -> Union[int, float]:
+        """
+        Returns a pipe height in accordance with game rules.
+        i.e if Top pipe, then returned height is random, and if Bottom pipe,
+        then returned height is calculated to leave a certain distance from top pipe
+        and then extend to bottom of screen
+        """
         if self.side == "BOTTOM":
             return self.get_height_according_to_other_pipe()
 
         else:
             return PipeSettings.get_random_height()
 
+    def get_height_according_to_other_pipe(self) -> Union[int, float]:
+        """
+        Leave a distance of player_jump_height * 2.5 to keep the game fair.
+        """
 
-    def get_height_according_to_other_pipe(self):
-
-        # Bottom side must leave at least jump limit distance from top pipe
-        # lower_limit = ScreenSettings.height - self.other_pipe.height - PlayerSettings.jump_height_limit*3
-        # upper_limit = ScreenSettings.height - self.other_pipe.height - (PlayerSettings.jump_height_limit*2)
-
-        # height = randint(lower_limit, upper_limit)
-
-        height = upper_limit = ScreenSettings.height - self.other_pipe.height - (PlayerSettings.jump_height_limit*2.5)
+        height = ScreenSettings.height - self.top_pipe.height - (PlayerSettings.jump_height_limit*2.5)
 
         return height
 
 
-    def get_body_rect(self):
+    def get_body_rect(self) -> pygame.Rect:
+        """
+        Returns a pygame.Rect object for pipe body
+        """
         
         self.x = self.starting_x
 
@@ -62,8 +78,11 @@ class Pipe:
 
         return pygame.Rect(self.x, self.y, self.width, self.height)
 
+    def get_tip_rect(self) -> pygame.Rect:
+        """
+        Returns a pygame.Rect object for pipe tip
+        """
 
-    def get_tip_rect(self):
         return pygame.Rect(
             
             self.body_rect.centerx - PipeSettings.tip_width // 2,
@@ -76,71 +95,93 @@ class Pipe:
         )
 
 
-
-    def determine_y_from_side(self):
+    def determine_y_from_side(self) -> int:
+        """
+        Return pipe y according to its side
+        """
         if self.side == "TOP":
-            # simply start at 0
+            # Top pipe always starts at y = 0
             y = 0
 
-        else:
-
-            # offset from max screen y by pipe height
+        elif self.side == "BOTTOM":
+            # Bottom pipe is offsetted from max y according to its height
             y = ScreenSettings.height - self.height
 
+        else:
+            self.check_side_and_top_pipe_reference(self.side, self.top_pipe)
 
         return y
 
+    def determine_tip_y_from_side(self) -> int:
+        """
+        Return pipe tip's y according to pipe side
+        """
 
-    def determine_tip_y_from_side(self):
+        tip_y = 0
 
         if self.side == "TOP":
             # Raise up if on top side
-            return self.height - PipeSettings.tip_height
+            tip_y = self.height - PipeSettings.tip_height
+
+        elif self.side == "BOTTOM":
+            # Push down if on bottom
+            tip_y = self.y - PipeSettings.tip_height + 1
 
         else:
-            # Push down if on bottom
-            return self.y - PipeSettings.tip_height + 1
+            self.check_side_and_top_pipe_reference(self.side, self.top_pipe)
+
+        return tip_y
 
 
-
-    def draw(self, screen):
+    def draw(self, screen) -> None:
+        """
+        Draws pipe body and tip to screen
+        """
 
         # A Pipe is two shapes: the wide bit at the tip and the slightly narrower body
         self.draw_body(screen)
         self.draw_tip(screen)
 
-
-    def draw_body(self, screen):
+    def draw_body(self, screen) -> None:
+        """
+        Draw pipe body
+        """
         pygame.draw.rect(screen, Colors.green, self.body_rect)
 
         # outline
         pygame.draw.rect(screen, Colors.black, self.body_rect, width=1)
 
-
-    def draw_tip(self, screen):
+    def draw_tip(self, screen) -> None:
+        """
+        Draws pipe tip
+        """
         pygame.draw.rect(screen, Colors.green, self.tip_rect)
 
         # outline
         pygame.draw.rect(screen, Colors.black, self.tip_rect, width=1)
 
 
-
-    
-    def update(self):
+    def update(self) -> None:
+        """
+        Update states and check collisions
+        """
         
         self.move_left()
-        self.check_out_of_bounds()
+        self.check_if_past_screen_left()
 
         self.check_collision_with_player()
 
+    def move_left(self) -> None:
+        """
+        Moves pipe and tip to left every frame by pre-determined amount
+        """
+        self.body_rect.x -= PipeSettings.scroll_left_speed
+        self.tip_rect.x -= PipeSettings.scroll_left_speed
 
-
-    def move_left(self):
-        self.body_rect.x -= PipeSettings.move_speed
-        self.tip_rect.x -= PipeSettings.move_speed
-
-
-    def check_out_of_bounds(self):
+    def check_if_past_screen_left(self) -> None:
+        """
+        if pipe is past left bounds, this method moves it to screen right and gives it a new height
+        """
 
         # Body
         if self.body_rect.right < 0:
@@ -148,10 +189,12 @@ class Pipe:
             self.tip_rect.centerx = self.body_rect.centerx
 
             # Make it seem like a new pipe popped out after this one is out of bounds
-            self.make_new_height()
+            self.set_new_random_height()
 
-
-    def make_new_height(self):
+    def set_new_random_height(self) -> None:
+        """
+        Assign new random height to pipe
+        """
         
         self.height = self.set_height()        
 
@@ -164,9 +207,11 @@ class Pipe:
         self.tip_rect = self.get_tip_rect()
 
 
-    def check_collision_with_player(self):
+    # REFACTOR: Move collision checking to player object to allow multiple players spawning at once.
+    def check_collision_with_player(self) -> None:
+        
         # If body or tip collide with player
         if pygame.Rect.colliderect(self.body_rect, self.player.rect) == 1 \
             or pygame.Rect.colliderect(self.tip_rect, self.player.rect):
-            self.player.die()
 
+            self.player.die()

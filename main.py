@@ -119,13 +119,15 @@ if __name__ == '__main__':
     birb = Player(on_death=lambda: on_player_death(screen, [gameover_text_draw]))
 
     top_pipe = Pipe(offset=0, player=birb)
-    bottom_pipe = Pipe(offset=0, side="BOTTOM", other_pipe=top_pipe, player=birb)
+    bottom_pipe = Pipe(offset=0, side="BOTTOM", top_pipe=top_pipe, player=birb)
 
     top_pipe1 = Pipe(offset=500, player=birb)
-    bottom_pipe1 = Pipe(offset=500, side="BOTTOM", other_pipe=top_pipe1, player=birb)
+    bottom_pipe1 = Pipe(offset=500, side="BOTTOM", top_pipe=top_pipe1, player=birb)
 
     top_pipe2 = Pipe(offset=1000, player=birb)
-    bottom_pipe2 = Pipe(offset=1000, side="BOTTOM", other_pipe=top_pipe2, player=birb)
+    bottom_pipe2 = Pipe(offset=1000, side="BOTTOM", top_pipe=top_pipe2, player=birb)
+
+    # TODO: create 'Pipes' class to make drawing and colliding with pipes syntatically cleaner
 
     run_game(
 

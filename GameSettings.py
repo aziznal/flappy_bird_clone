@@ -11,13 +11,10 @@ class Colors:
     screen_background = (201, 230, 255)
 
 
-
-
 class ScreenSettings:
 
     width = 1200
     height = 800
-
 
 
 class PlayerSettings:
@@ -25,7 +22,7 @@ class PlayerSettings:
     width = 50
     height = 50
 
-    # px per frame (multiply by 60)
+    # px per frame
     fall_speed = 0.4
 
     jump_height_limit = 90 + 9 *3
@@ -40,14 +37,18 @@ class PipeSettings:
     tip_width =  width + 20
     tip_height = 75
 
-    move_speed = 4  # px per frame
+    scroll_left_speed = 4  # px per frame
 
 
     @staticmethod
-    def get_random_height():
+    def get_random_height() -> int:
+        """
+        Returns a random number with a value between 10% and 70% of screen height
+        """
 
         # Height must be at least 20% of the screen height
-        # Height will be upto half the screen minus player jump height so game is never technically impossible
+        # Height will be upto half the screen minus player jump height,
+        # so game is never technically impossible
 
         bottom_limit =  ScreenSettings.height * 10/100
         top_limit = ScreenSettings.height * 70/100
@@ -57,7 +58,8 @@ class PipeSettings:
 
 class GravitySettings:
 
-    time_vector = list(range(2, 10))   # terminal velocity is reached at t = 59 (one second)
+    # creating a time vector to control when terminal velocity is reached and acceleration stops
+    time_vector = list(range(2, 10))
 
-    acceleration = .2    # px / second (probably?)
+    acceleration = .2    # px / frame (probably?)
 
