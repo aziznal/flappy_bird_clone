@@ -25,8 +25,8 @@ class PlayerSettings:
     # px per frame
     fall_speed = 0.4
 
-    jump_height_limit = 90 + 9 *3
-    jump_increment_per_frame = 9
+    jump_height_limit = 125
+    jump_increment_per_frame = jump_height_limit / 10
 
 
 class PipeSettings:
@@ -61,5 +61,5 @@ class GravitySettings:
     # creating a time vector to control when terminal velocity is reached and acceleration stops
     time_vector = list(range(2, 10))
 
-    acceleration = .2    # px / frame (probably?)
+    acceleration = .25    # px / frame (probably?)
 

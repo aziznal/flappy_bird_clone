@@ -116,9 +116,9 @@ class Player:
         """
         Drop player at an accelerating speed
         """
-        # Based on this physics equation: v_1 = v_0*t + 1/2*a*t^2
-        self.rect.y += PlayerSettings.fall_speed * self.current_gravity_t + .5*GravitySettings.acceleration*(self.current_gravity_t**2)
+        self.rect.y += GravitySettings.acceleration*(self.current_gravity_t**2)
         self.current_gravity_t = self.get_next_gravity_t()
+
     
     def get_next_gravity_t(self) -> int:
         """

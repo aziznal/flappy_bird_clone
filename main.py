@@ -127,8 +127,8 @@ if __name__ == '__main__':
     
     birb = Player(on_death=lambda: display_gameover_screen(screen), pipes = [])
 
-    controller =  PlayerController([])
-    controller.make_player_jump_at_a_constant_rate()
+    # controller =  PlayerController([])
+    # controller.make_player_jump_at_a_constant_rate()
 
     run_game(
 
@@ -138,12 +138,12 @@ if __name__ == '__main__':
             birb.draw,
             pipes.draw,
             score_text.draw,
-            controller.draw
+            # controller.draw
         ],
         update_functions=[   
             birb.update,
             pipes.update,
-            controller.update
+            # controller.update
         ]
 
     )
