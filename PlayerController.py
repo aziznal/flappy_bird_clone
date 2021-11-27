@@ -30,7 +30,7 @@ class PlayerController:
 
         self.player = Player(lambda: print("ded"), self.pipes)
 
-    @setInterval(.48)
+    @setInterval(.367)
     def make_player_jump_at_a_constant_rate(self) -> None:
         self.player.jump()
 
